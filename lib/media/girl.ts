@@ -1,0 +1,40 @@
+import fs from "fs";
+import path from "path";
+
+const dataPath = path.join(__dirname, "data", "girl.json");
+let girlList: string[] = [];
+
+try {
+	const raw = fs.readFileSync(dataPath, "utf8");
+	const parsed = JSON.parse(raw);
+	if (Array.isArray(parsed)) girlList = parsed as string[];
+} catch (err) {
+	girlList = [];
+}
+
+export function getRandomGirl() {
+	if (!girlList || girlList.length === 0) return null;
+	const idx = Math.floor(Math.random() * girlList.length);
+	return { total: girlList.length, index: idx, url: girlList[idx] };
+}
+
+// Minimal HTTP handler compatible with Node/Express-like APIs
+export function randomHandler(req: any, res: any) {
+	const data = getRandomGirl();
+	if (!data) return res.json({ error: "no data" });
+	let url = data.url;
+	if (!/^https?:\/\//i.test(url)) {
+		const host = req.get && req.get('host') ? req.get('host') : (req.headers && req.headers.host) || 'localhost:3000';
+		const proto = (req.protocol || (req.headers && req.headers['x-forwarded-proto'])) || 'http';
+		url = `${proto}://${host}${url.startsWith('/') ? '' : '/'}${url}`;
+	}
+	const cre = req.query && (req.query.cre || req.query.creator) ? (req.query.cre || req.query.creator) : 'Khánh Duy';
+	const payload = { total: data.total, index: data.index, url, cre };
+	if (res && typeof res.setHeader === 'function') {
+		res.setHeader('Content-Type', 'application/json');
+		return res.json(payload);
+	}
+	return payload;
+}
+
+export default getRandomGirl;
