@@ -58,6 +58,9 @@ try {
 const app = express();
 app.use(express.json());
 
+// Serve static files from root directory
+app.use(express.static(path.join(__dirname, '..')));
+
 // Port and LAN detection — used to build URLs that expose the machine's LAN IP
 const PORT = process.env.PORT || 3000;
 function getLanIp() {
@@ -85,7 +88,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => res.json({ ok: true, base: BASE }));
+// Serve index.html as homepage
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'index.html'));
+});
 
 // Normalize duplicate base prefixes like /api/v1/api/v1/... -> /api/v1/...
 app.use((req, res, next) => {
