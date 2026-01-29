@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng dẫn sử dụng API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; }
+        .container { max-width: 800px; margin: auto; background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 2px 8px #0001; }
+        h1 { color: #2d7be5; }
+        code { background: #eee; padding: 2px 6px; border-radius: 4px; }
+        pre { background: #f4f4f4; padding: 12px; border-radius: 6px; overflow-x: auto; }
+        ul { margin-bottom: 24px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hướng dẫn sử dụng API</h1>
+        <p>Trang này hướng dẫn chi tiết cách sử dụng các API trong dự án này và cho phép bạn test trực tiếp.</p>
+        <h2>Hướng dẫn sử dụng API</h2>
+        <h3>1. SoundCloud</h3>
+        <ul>
+            <li><b>Tìm kiếm nhạc:</b> <code>/api/v1/soundcloud/search?q=KEYWORD</code></li>
+            <li><b>Lấy link tải nhạc:</b> <code>/api/v1/soundcloud/download?url=LINK</code></li>
+            <li><b>Lấy link tải nhanh (nếu có):</b> <code>/api/v1/soundcloud/search?q=KEYWORD</code> (trả về mp3 nếu tìm thấy)</li>
+        </ul>
+        <h3>2. TikTok</h3>
+        <ul>
+            <li><b>Tải video:</b> <code>/api/v1/tiktok/down?url=LINK</code></li>
+        </ul>
+        <h3>3. Facebook</h3>
+        <ul>
+            <li><b>Tải video:</b> <code>/api/v1/facebook?url=LINK</code></li>
+            <li><b>Lấy info video:</b> <code>/api/v1/facebook/getinfov2?url=LINK</code></li>
+        </ul>
+        <h3>4. Capcut</h3>
+        <ul>
+            <li><b>Tải template:</b> <code>/api/v1/capcut/down?url=LINK</code></li>
+        </ul>
+        <h3>5. Đố vui, truyện cười, thơ, ca dao, danh ngôn...</h3>
+        <ul>
+            <li><b>Đố vui:</b> <code>/api/v1/game/dovui</code></li>
+            <li><b>Truyện cười:</b> <code>/api/v1/media/truyencuoi</code></li>
+            <li><b>Thơ:</b> <code>/api/v1/media/du</code></li>
+            <li><b>Ca dao:</b> <code>/api/v1/media/cadao</code></li>
+            <li><b>Danh ngôn:</b> <code>/api/v1/media/chamngon</code></li>
+            <li><b>Hình ảnh anime/girl:</b> <code>/api/v1/media/anime</code>, <code>/api/v1/media/girl</code>, <code>/api/v1/media/girlsexy</code></li>
+            <li><b>Video anime/gái:</b> <code>/api/v1/media/videoanime</code>, <code>/api/v1/media/videogai</code></li>
+            <li><b>Thính, mông, joker:</b> <code>/api/v1/media/thinh</code>, <code>/api/v1/media/mong</code>, <code>/api/v1/media/joker</code></li>
+        </ul>
+        <h2>Cách sử dụng</h2>
+        <ol>
+            <li>Chạy server Node.js: <pre>npm start</pre></li>
+            <li>Truy cập các endpoint API đúng như ví dụ phía trên (bắt đầu bằng <b>/api/v1/...</b>).</li>
+            <li>Có thể dùng trình duyệt, Postman, curl hoặc form bên dưới để test trực tiếp.</li>
+            <li>Nếu dùng form bên dưới, chỉ cần nhập phần sau domain, ví dụ: <code>/api/v1/soundcloud/search?q=son tung</code></li>
+        </ol>
+        <h2>Test API trực tiếp</h2>
+        <form id="apiForm" style="margin-bottom:16px;">
+            <label>Nhập endpoint (ví dụ: <code>/api/v1/soundcloud/search?q=son tung</code>):<br>
+                <input type="text" id="endpoint" value="/api/v1/soundcloud/search?q=son tung" style="width:90%;padding:6px;">
+            </label>
+            <button type="submit">Gửi yêu cầu</button>
+        </form>
+        <pre id="apiResult" style="min-height:60px;"></pre>
+        <script>
+        document.getElementById('apiForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const ep = document.getElementById('endpoint').value.trim();
+            const url = ep.startsWith('http') ? ep : (location.origin + ep);
+            document.getElementById('apiResult').textContent = 'Đang gửi yêu cầu...';
+            try {
+                const res = await fetch(url);
+                const txt = await res.text();
+                document.getElementById('apiResult').textContent = txt;
+            } catch (err) {
+                document.getElementById('apiResult').textContent = 'Lỗi: ' + err;
+            }
+        };
+        </script>
+        <h2>Ví dụ sử dụng với curl</h2>
+        <pre>curl "http://localhost:3000/api/v1/soundcloud/download?url=https://soundcloud.com/abcxyz"</pre>
+        <h2>Liên hệ & Đóng góp</h2>
+        <p>Nếu có thắc mắc hoặc muốn đóng góp, vui lòng liên hệ qua Github hoặc email của tác giả.</p>
+    </div>
+</body>
+</html>
